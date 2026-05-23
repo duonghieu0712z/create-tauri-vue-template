@@ -16,7 +16,15 @@
         "access": "public"
     },
     "scripts": {
+        "format": "oxfmt --check .",
+        "format:fix": "oxfmt .",
+        "lint": "oxlint .",
+        "lint:fix": "oxlint --fix .",
         "prepack": "node scripts/prepare-template.js"
+    },
+    "devDependencies": {
+        "oxfmt": "^0.51.0",
+        "oxlint": "^1.66.0"
     },
     "engines": {
         "node": "^20.19.0 || >=22.12.0"
