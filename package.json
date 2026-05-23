@@ -1,0 +1,24 @@
+{
+    "name": "@duonghieu0712z/create-tauri-vue-template",
+    "version": "0.0.2",
+    "description": "Create a Tauri 2 + Vue 3 desktop app from the tauri-vue-template starter.",
+    "bin": {
+        "create-tauri-vue-template": "bin/index.js"
+    },
+    "files": [
+        "assets",
+        "bin",
+        "scripts",
+        "template"
+    ],
+    "type": "module",
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "prepack": "node scripts/prepare-template.js"
+    },
+    "engines": {
+        "node": "^20.19.0 || >=22.12.0"
+    }
+}
