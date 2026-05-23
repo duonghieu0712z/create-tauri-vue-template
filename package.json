@@ -22,6 +22,9 @@
         "lint:fix": "oxlint --fix .",
         "prepack": "node scripts/prepare-template.js"
     },
+    "dependencies": {
+        "tar": "^7.5.1"
+    },
     "devDependencies": {
         "oxfmt": "^0.51.0",
         "oxlint": "^1.66.0"
