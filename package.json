@@ -1,6 +1,6 @@
 {
     "name": "@duonghieu0712z/create-tauri-vue-template",
-    "version": "0.0.1",
+    "version": "0.0.3",
     "description": "Create a Tauri 2 + Vue 3 desktop app from the tauri-vue-template starter.",
     "bin": {
         "create-tauri-vue-template": "dist/bin/index.js"
