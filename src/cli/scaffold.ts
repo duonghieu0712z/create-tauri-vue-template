@@ -37,16 +37,23 @@ async function removeTemplateArtifacts(targetDir: string): Promise<void> {
 }
 
 async function restorePackagedGitignore(targetDir: string): Promise<void> {
-    const packagedGitignorePath = resolve(targetDir, '_gitignore');
+    const entries = await readdir(targetDir, { withFileTypes: true });
 
-    try {
-        await copyFile(packagedGitignorePath, resolve(targetDir, '.gitignore'));
-        await rm(packagedGitignorePath, { force: true });
-    } catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-            throw error;
-        }
-    }
+    await Promise.all(
+        entries.map(async (entry) => {
+            const entryPath = resolve(targetDir, entry.name);
+
+            if (entry.isDirectory()) {
+                await restorePackagedGitignore(entryPath);
+                return;
+            }
+
+            if (entry.isFile() && entry.name === '_gitignore') {
+                await copyFile(entryPath, resolve(targetDir, '.gitignore'));
+                await rm(entryPath, { force: true });
+            }
+        }),
+    );
 }
 
 export async function scaffoldProject(

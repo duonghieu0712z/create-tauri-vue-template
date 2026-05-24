@@ -10,8 +10,6 @@ import { extract } from 'tar';
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const packageDir = resolve(currentDir, '..', '..');
 const templateDir = resolve(packageDir, 'template');
-const templateGitignorePath = resolve(templateDir, '.gitignore');
-const packagedGitignorePath = resolve(templateDir, '_gitignore');
 const archivePath = resolve(packageDir, '.tmp-template.tar.gz');
 const templateRepo = process.env.TAURI_VUE_TEMPLATE_REPO || 'duonghieu0712z/tauri-vue-template';
 const templateRef = process.env.TAURI_VUE_TEMPLATE_REF || 'main';
@@ -80,8 +78,27 @@ async function extractTemplateArchive(): Promise<void> {
 }
 
 async function stagePackagedGitignore(): Promise<void> {
+    async function visit(dir: string): Promise<void> {
+        const entries = await readdir(dir, { withFileTypes: true });
+
+        await Promise.all(
+            entries.map(async (entry) => {
+                const entryPath = resolve(dir, entry.name);
+
+                if (entry.isDirectory()) {
+                    await visit(entryPath);
+                    return;
+                }
+
+                if (entry.isFile() && entry.name === '.gitignore') {
+                    await copyFile(entryPath, resolve(dir, '_gitignore'));
+                }
+            }),
+        );
+    }
+
     try {
-        await copyFile(templateGitignorePath, packagedGitignorePath);
+        await visit(templateDir);
     } catch (error) {
         if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
             throw error;
