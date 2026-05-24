@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { createWriteStream } from 'node:fs';
-import { cp, mkdir, readdir, rm } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readdir, rm } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
@@ -10,6 +10,8 @@ import { extract } from 'tar';
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const packageDir = resolve(currentDir, '..', '..');
 const templateDir = resolve(packageDir, 'template');
+const templateGitignorePath = resolve(templateDir, '.gitignore');
+const packagedGitignorePath = resolve(templateDir, '_gitignore');
 const archivePath = resolve(packageDir, '.tmp-template.tar.gz');
 const templateRepo = process.env.TAURI_VUE_TEMPLATE_REPO || 'duonghieu0712z/tauri-vue-template';
 const templateRef = process.env.TAURI_VUE_TEMPLATE_REF || 'main';
@@ -77,6 +79,16 @@ async function extractTemplateArchive(): Promise<void> {
     });
 }
 
+async function stagePackagedGitignore(): Promise<void> {
+    try {
+        await copyFile(templateGitignorePath, packagedGitignorePath);
+    } catch (error) {
+        if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
+            throw error;
+        }
+    }
+}
+
 await rm(templateDir, { recursive: true, force: true });
 await rm(archivePath, { force: true });
 
@@ -87,5 +99,7 @@ if (templateSourceDir) {
     await extractTemplateArchive();
     await rm(archivePath, { force: true });
 }
+
+await stagePackagedGitignore();
 
 console.log(`Prepared template at ${templateDir}`);
