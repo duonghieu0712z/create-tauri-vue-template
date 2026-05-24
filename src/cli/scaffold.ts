@@ -1,4 +1,4 @@
-import { access, copyFile, cp, mkdir, readdir } from 'node:fs/promises';
+import { access, copyFile, cp, mkdir, readdir, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 import { renameProject } from './project.js';
@@ -28,6 +28,14 @@ export async function writeEditorSettings(targetDir: string, packageDir: string)
     );
 }
 
+async function removeTemplateArtifacts(targetDir: string): Promise<void> {
+    await Promise.all(
+        ['CHANGELOG.md', 'Changelog.md', 'changelog.md'].map((fileName) =>
+            rm(resolve(targetDir, fileName), { force: true }),
+        ),
+    );
+}
+
 export async function scaffoldProject(
     targetDir: string,
     packageDir: string,
@@ -38,6 +46,7 @@ export async function scaffoldProject(
     await ensureTemplate(templateDir);
     await ensureEmptyTarget(targetDir);
     await cp(templateDir, targetDir, { recursive: true });
+    await removeTemplateArtifacts(targetDir);
     await writeEditorSettings(targetDir, packageDir);
     await renameProject(targetDir, identity);
 }

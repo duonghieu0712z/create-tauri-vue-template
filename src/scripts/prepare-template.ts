@@ -25,13 +25,16 @@ const excludedPaths = new Set([
     'packages',
     'src-tauri/target',
 ]);
+const excludedFileNames = new Set(['changelog.md']);
 
 function normalizePath(path: string): string {
     return path.replaceAll('\\', '/');
 }
 
 function shouldInclude(relativePath: string): boolean {
-    return !excludedPaths.has(normalizePath(relativePath));
+    const normalizedPath = normalizePath(relativePath);
+    const fileName = normalizedPath.split('/').at(-1)?.toLowerCase();
+    return !excludedPaths.has(normalizedPath) && !excludedFileNames.has(fileName ?? '');
 }
 
 async function copyTemplateSource(sourceDir: string): Promise<void> {

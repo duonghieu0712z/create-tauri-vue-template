@@ -6,12 +6,14 @@ import type { ProjectIdentity } from './types.js';
 
 type PackageJson = {
     name: string;
+    version: string;
     author?: string;
     [key: string]: unknown;
 };
 
 type TauriConfig = {
     productName: string;
+    version: string;
     identifier: string;
     app: {
         windows: Array<{
@@ -27,10 +29,13 @@ type TauriConfig = {
     [key: string]: unknown;
 };
 
+const initialProjectVersion = '0.0.1';
+
 export async function renameProject(targetDir: string, identity: ProjectIdentity): Promise<void> {
     const packageJsonPath = resolve(targetDir, 'package.json');
     const packageJson = await readJson<PackageJson>(packageJsonPath);
     packageJson.name = identity.packageName;
+    packageJson.version = initialProjectVersion;
     if (identity.author) {
         packageJson.author = identity.author;
     } else {
@@ -41,6 +46,7 @@ export async function renameProject(targetDir: string, identity: ProjectIdentity
     const tauriConfigPath = resolve(targetDir, 'src-tauri', 'tauri.conf.json');
     const tauriConfig = await readJson<TauriConfig>(tauriConfigPath);
     tauriConfig.productName = identity.appName;
+    tauriConfig.version = initialProjectVersion;
     tauriConfig.identifier = identity.identifier;
     tauriConfig.app.windows = tauriConfig.app.windows.map((window) => ({
         ...window,
@@ -59,6 +65,7 @@ export async function renameProject(targetDir: string, identity: ProjectIdentity
 
     await updateText(resolve(targetDir, 'src-tauri', 'Cargo.toml'), [
         [/^name = "([^"]+)"/m, `name = "${identity.crateName}"`],
+        [/^version = "([^"]+)"/m, `version = "${initialProjectVersion}"`],
         [/^description = "([^"]+)"/m, `description = "${identity.appName}"`],
         [/^(\[lib\]\s+[\s\S]*?^name = )"([^"]+)"/m, `$1"${identity.crateLibName}"`],
     ]);
