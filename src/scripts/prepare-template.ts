@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { extract } from 'tar';
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
-const packageDir = resolve(currentDir, '..');
+const packageDir = resolve(currentDir, '..', '..');
 const templateDir = resolve(packageDir, 'template');
 const archivePath = resolve(packageDir, '.tmp-template.tar.gz');
 const templateRepo = process.env.TAURI_VUE_TEMPLATE_REPO || 'duonghieu0712z/tauri-vue-template';
@@ -26,15 +26,16 @@ const excludedPaths = new Set([
     'src-tauri/target',
 ]);
 
-function normalizePath(path) {
+function normalizePath(path: string): string {
     return path.replaceAll('\\', '/');
 }
 
-function shouldInclude(relativePath) {
+function shouldInclude(relativePath: string): boolean {
     return !excludedPaths.has(normalizePath(relativePath));
 }
 
-async function copyTemplateSource(sourceDir) {
+async function copyTemplateSource(sourceDir: string): Promise<void> {
+    await mkdir(templateDir, { recursive: true });
     await readdir(sourceDir).then((entries) =>
         Promise.all(
             entries
@@ -52,7 +53,7 @@ async function copyTemplateSource(sourceDir) {
     );
 }
 
-async function downloadTemplateArchive() {
+async function downloadTemplateArchive(): Promise<void> {
     const archiveUrl = `https://github.com/${templateRepo}/archive/${templateRef}.tar.gz`;
     const response = await fetch(archiveUrl);
 
@@ -63,7 +64,7 @@ async function downloadTemplateArchive() {
     await pipeline(response.body, createWriteStream(archivePath));
 }
 
-async function extractTemplateArchive() {
+async function extractTemplateArchive(): Promise<void> {
     await mkdir(templateDir, { recursive: true });
     await extract({
         file: archivePath,

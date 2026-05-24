@@ -1,4 +1,4 @@
-# create-tauri-vue-template
+# Create Tauri Vue Template
 
 Create a Tauri 2 + Vue 3 desktop app from the `tauri-vue-template` starter.
 
@@ -26,9 +26,12 @@ Install dependencies:
 pnpm install
 ```
 
+The CLI source lives in `src/` and is compiled to `dist/`. The published package runs the compiled JavaScript entry at `dist/bin/index.js`.
+
 Check formatting and linting:
 
 ```bash
+pnpm build
 pnpm format
 pnpm lint
 ```
@@ -45,18 +48,20 @@ pnpm lint:fix
 Run the CLI from this repository:
 
 ```bash
-node bin/index.js
+pnpm build
+node dist/bin/index.js
 ```
 
 Run without prompts:
 
 ```bash
-node bin/index.js --name "My App" --id "com.example.my-app" --author "Your Name"
+pnpm build
+node dist/bin/index.js --name "My App" --id "com.example.my-app" --author "Your Name"
 ```
 
 ## Publish
 
-Build the npm package tarball contents through the `prepack` script:
+Build and inspect the npm package tarball contents through the `prepack` script. This compiles TypeScript to `dist/` and prepares the bundled template before packing:
 
 ```bash
 pnpm pack --dry-run

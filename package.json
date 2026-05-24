@@ -3,12 +3,11 @@
     "version": "0.0.1",
     "description": "Create a Tauri 2 + Vue 3 desktop app from the tauri-vue-template starter.",
     "bin": {
-        "create-tauri-vue-template": "bin/index.js"
+        "create-tauri-vue-template": "dist/bin/index.js"
     },
     "files": [
         "assets",
-        "bin",
-        "scripts",
+        "dist",
         "template"
     ],
     "type": "module",
@@ -16,18 +15,24 @@
         "access": "public"
     },
     "scripts": {
+        "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+        "build": "pnpm clean && tsc -p tsconfig.json",
         "format": "oxfmt --check .",
         "format:fix": "oxfmt .",
         "lint": "oxlint .",
         "lint:fix": "oxlint --fix .",
-        "prepack": "node scripts/prepare-template.js"
+        "prepack": "pnpm build && node dist/scripts/prepare-template.js"
     },
     "dependencies": {
+        "cac": "^7.0.0",
+        "picocolors": "^1.1.1",
         "tar": "^7.5.1"
     },
     "devDependencies": {
+        "@types/node": "^25.9.1",
         "oxfmt": "^0.51.0",
-        "oxlint": "^1.66.0"
+        "oxlint": "^1.66.0",
+        "typescript": "~6.0.3"
     },
     "engines": {
         "node": "^20.19.0 || >=22.12.0"
