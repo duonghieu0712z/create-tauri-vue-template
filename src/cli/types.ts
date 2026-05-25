@@ -3,6 +3,7 @@ export type CliOptions = {
     package?: string;
     id?: string;
     author?: string;
+    description?: string;
 };
 
 export type PromptDefaults = {
@@ -10,7 +11,7 @@ export type PromptDefaults = {
 };
 
 export type ResolvedOptions = Required<Pick<CliOptions, 'name' | 'package' | 'id'>> &
-    Pick<CliOptions, 'author'>;
+    Pick<CliOptions, 'author' | 'description'>;
 
 export type ProjectIdentity = {
     appName: string;
@@ -19,6 +20,7 @@ export type ProjectIdentity = {
     crateLibName: string;
     identifier: string;
     author?: string;
+    description?: string;
 };
 
 export type Replacement = [pattern: RegExp, replacement: string];

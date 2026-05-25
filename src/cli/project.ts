@@ -8,6 +8,7 @@ type PackageJson = {
     name: string;
     version: string;
     author?: string;
+    description?: string;
     [key: string]: unknown;
 };
 
@@ -41,6 +42,11 @@ export async function renameProject(targetDir: string, identity: ProjectIdentity
     } else {
         delete packageJson.author;
     }
+    if (identity.description) {
+        packageJson.description = identity.description;
+    } else {
+        delete packageJson.description;
+    }
     await writeJson(packageJsonPath, packageJson);
 
     const tauriConfigPath = resolve(targetDir, 'src-tauri', 'tauri.conf.json');
@@ -63,10 +69,15 @@ export async function renameProject(targetDir: string, identity: ProjectIdentity
         [/<title>.*<\/title>/, `<title>${identity.appName}</title>`],
     ]);
 
+    await updateText(resolve(targetDir, 'README.md'), [[/^# .+$/m, `# ${identity.appName}`]]);
+
     await updateText(resolve(targetDir, 'src-tauri', 'Cargo.toml'), [
         [/^name = "([^"]+)"/m, `name = "${identity.crateName}"`],
         [/^version = "([^"]+)"/m, `version = "${initialProjectVersion}"`],
-        [/^description = "([^"]+)"/m, `description = "${identity.appName}"`],
+        [
+            /^description = "([^"]+)"/m,
+            `description = "${identity.description || identity.appName}"`,
+        ],
         [/^(\[lib\]\s+[\s\S]*?^name = )"([^"]+)"/m, `$1"${identity.crateLibName}"`],
     ]);
 

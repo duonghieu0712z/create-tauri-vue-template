@@ -32,6 +32,7 @@ function parseCommand(): CliCommand {
         .option('--package <name>', 'Package name')
         .option('--id <identifier>', 'Tauri application identifier')
         .option('--author <name>', 'Project author')
+        .option('--description <description>', 'Project description')
         .help()
         .version(packageJson.version);
 
@@ -52,6 +53,7 @@ function parseCommand(): CliCommand {
             package: options.package,
             id: options.id,
             author: options.author,
+            description: options.description,
         },
     };
 }
@@ -61,7 +63,7 @@ async function main(): Promise<void> {
 
     if (!projectDir && !options.name && (!process.stdin.isTTY || !process.stdout.isTTY)) {
         throw new Error(
-            'Usage: pnpm create @duonghieu0712z/tauri-vue-template@latest [project-dir] --name "My App" --id "com.example.my-app"',
+            'Usage: pnpm create @duonghieu0712z/tauri-vue-template@latest [project-dir] --name "My App"',
         );
     }
 
@@ -80,11 +82,13 @@ async function main(): Promise<void> {
     const targetDir = resolve(process.cwd(), targetArg);
     const crateName = toKebabCase(packageName);
     const crateLibName = `${toSnakeCase(crateName)}_lib`;
+    const author = resolvedOptions.author?.trim();
     const identifier = requiredValue(
-        resolvedOptions.id?.trim() || `com.example.${packageName}`,
+        resolvedOptions.id?.trim() ||
+            `com.${author ? toKebabCase(author) : 'example'}.${toKebabCase(appName)}`,
         'Tauri identifier',
     );
-    const author = resolvedOptions.author?.trim();
+    const description = resolvedOptions.description?.trim();
 
     const currentDir = dirname(fileURLToPath(import.meta.url));
     const packageDir = resolve(currentDir, '..', '..');
@@ -96,6 +100,7 @@ async function main(): Promise<void> {
         crateLibName,
         identifier,
         author,
+        description,
     });
 
     const relativeTargetDir = relative(process.cwd(), targetDir) || '.';
