@@ -1,18 +1,12 @@
 #!/usr/bin/env node
 
-import { createWriteStream } from 'node:fs';
 import { copyFile, cp, mkdir, readdir, rm } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { pipeline } from 'node:stream/promises';
 import { fileURLToPath } from 'node:url';
-import { extract } from 'tar';
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const packageDir = resolve(currentDir, '..', '..');
 const templateDir = resolve(packageDir, 'template');
-const archivePath = resolve(packageDir, '.tmp-template.tar.gz');
-const templateRepo = process.env.TAURI_VUE_TEMPLATE_REPO || 'duonghieu0712z/tauri-vue-template';
-const templateRef = process.env.TAURI_VUE_TEMPLATE_REF || 'main';
 const templateSourceDir = process.env.TAURI_VUE_TEMPLATE_SOURCE
     ? resolve(process.env.TAURI_VUE_TEMPLATE_SOURCE)
     : null;
@@ -21,9 +15,11 @@ const excludedPaths = new Set([
     '.git',
     '.eslintcache',
     'dist',
+    'dist-ssr',
     'node_modules',
     'packages',
     'src-tauri/target',
+    'src-tauri/gen/schemas',
 ]);
 const excludedFileNames = new Set(['changelog.md']);
 
@@ -34,7 +30,58 @@ function normalizePath(path: string): string {
 function shouldInclude(relativePath: string): boolean {
     const normalizedPath = normalizePath(relativePath);
     const fileName = normalizedPath.split('/').at(-1)?.toLowerCase();
-    return !excludedPaths.has(normalizedPath) && !excludedFileNames.has(fileName ?? '');
+    const pathParts = normalizedPath.split('/');
+
+    if (!normalizedPath || excludedFileNames.has(fileName ?? '')) {
+        return false;
+    }
+
+    if (
+        fileName?.endsWith('.log') ||
+        fileName?.startsWith('npm-debug.log') ||
+        fileName?.startsWith('yarn-debug.log') ||
+        fileName?.startsWith('yarn-error.log') ||
+        fileName?.startsWith('pnpm-debug.log') ||
+        fileName?.startsWith('lerna-debug.log') ||
+        fileName?.endsWith('.local') ||
+        fileName?.endsWith('.tsbuildinfo')
+    ) {
+        return false;
+    }
+
+    if (
+        excludedPaths.has(normalizedPath) ||
+        [...excludedPaths].some((path) => normalizedPath.startsWith(`${path}/`))
+    ) {
+        return false;
+    }
+
+    if (
+        (pathParts[0] === 'logs' ||
+            pathParts[0] === '.idea' ||
+            pathParts[0] === '.eslintcache' ||
+            pathParts[0] === 'node_modules' ||
+            pathParts[0] === 'dist' ||
+            pathParts[0] === 'dist-ssr') &&
+        pathParts.length >= 1
+    ) {
+        return false;
+    }
+
+    if (
+        pathParts[0] === '.vscode' &&
+        normalizedPath !== '.vscode' &&
+        normalizedPath !== '.vscode/extensions.json' &&
+        normalizedPath !== '.vscode/settings.json'
+    ) {
+        return false;
+    }
+
+    if (pathParts[0] === '.husky' && pathParts[1] === '_' && normalizedPath !== '.husky/_') {
+        return false;
+    }
+
+    return true;
 }
 
 async function copyTemplateSource(sourceDir: string): Promise<void> {
@@ -56,27 +103,6 @@ async function copyTemplateSource(sourceDir: string): Promise<void> {
     );
 }
 
-async function downloadTemplateArchive(): Promise<void> {
-    const archiveUrl = `https://github.com/${templateRepo}/archive/${templateRef}.tar.gz`;
-    const response = await fetch(archiveUrl);
-
-    if (!response.ok || !response.body) {
-        throw new Error(`Could not download template archive: ${archiveUrl}`);
-    }
-
-    await pipeline(response.body, createWriteStream(archivePath));
-}
-
-async function extractTemplateArchive(): Promise<void> {
-    await mkdir(templateDir, { recursive: true });
-    await extract({
-        file: archivePath,
-        cwd: templateDir,
-        strip: 1,
-        filter: (path) => shouldInclude(path.split('/').slice(1).join('/')),
-    });
-}
-
 async function stagePackagedGitignore(): Promise<void> {
     async function visit(dir: string): Promise<void> {
         const entries = await readdir(dir, { withFileTypes: true });
@@ -92,6 +118,7 @@ async function stagePackagedGitignore(): Promise<void> {
 
                 if (entry.isFile() && entry.name === '.gitignore') {
                     await copyFile(entryPath, resolve(dir, '_gitignore'));
+                    await rm(entryPath, { force: true });
                 }
             }),
         );
@@ -106,17 +133,13 @@ async function stagePackagedGitignore(): Promise<void> {
     }
 }
 
-await rm(templateDir, { recursive: true, force: true });
-await rm(archivePath, { force: true });
-
-if (templateSourceDir) {
-    await copyTemplateSource(templateSourceDir);
-} else {
-    await downloadTemplateArchive();
-    await extractTemplateArchive();
-    await rm(archivePath, { force: true });
+if (!templateSourceDir) {
+    throw new Error('TAURI_VUE_TEMPLATE_SOURCE is required to refresh the packaged template');
 }
 
+await rm(templateDir, { recursive: true, force: true });
+
+await copyTemplateSource(templateSourceDir);
 await stagePackagedGitignore();
 
 console.log(`Prepared template at ${templateDir}`);

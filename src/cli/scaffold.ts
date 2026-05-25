@@ -20,14 +20,6 @@ export async function ensureTemplate(templateDir: string): Promise<void> {
     }
 }
 
-export async function writeEditorSettings(targetDir: string, packageDir: string): Promise<void> {
-    await mkdir(resolve(targetDir, '.vscode'), { recursive: true });
-    await copyFile(
-        resolve(packageDir, 'assets', 'vscode-settings.json'),
-        resolve(targetDir, '.vscode', 'settings.json'),
-    );
-}
-
 async function removeTemplateArtifacts(targetDir: string): Promise<void> {
     await Promise.all(
         ['CHANGELOG.md', 'Changelog.md', 'changelog.md'].map((fileName) =>
@@ -68,6 +60,5 @@ export async function scaffoldProject(
     await cp(templateDir, targetDir, { recursive: true });
     await restorePackagedGitignore(targetDir);
     await removeTemplateArtifacts(targetDir);
-    await writeEditorSettings(targetDir, packageDir);
     await renameProject(targetDir, identity);
 }
