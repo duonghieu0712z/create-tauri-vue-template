@@ -56,6 +56,7 @@ jobs:
       - name: Setup Rust
         uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
+          toolchain: nightly
           components: rustfmt, clippy
 
       - name: Rust cache
@@ -64,7 +65,7 @@ jobs:
           workspaces: './src-tauri -> target'
 
       - name: Check formatting
-        run: cargo fmt --manifest-path src-tauri/Cargo.toml -- --check
+        run: cargo +nightly fmt --manifest-path src-tauri/Cargo.toml -- --check
 
       - name: Check lint
-        run: cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -- -D warnings
+        run: cargo +nightly clippy --manifest-path src-tauri/Cargo.toml --all-targets --all-features -- -D warnings
