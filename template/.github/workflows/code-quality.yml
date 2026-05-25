@@ -41,6 +41,9 @@ jobs:
       - name: Check lint
         run: pnpm lint
 
+      - name: Check types
+        run: pnpm type-check
+
   rust:
     runs-on: ubuntu-latest
 
