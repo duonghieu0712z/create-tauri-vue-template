@@ -1,8 +1,12 @@
+import { execFile } from 'node:child_process';
 import { access, copyFile, cp, mkdir, readdir, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { promisify } from 'node:util';
 
 import { renameProject } from './project.js';
 import type { ProjectIdentity } from './types.js';
+
+const execFileAsync = promisify(execFile);
 
 export async function ensureEmptyTarget(path: string): Promise<void> {
     await mkdir(path, { recursive: true });
@@ -48,6 +52,10 @@ async function restorePackagedGitignore(targetDir: string): Promise<void> {
     );
 }
 
+async function initializeGitRepository(targetDir: string): Promise<void> {
+    await execFileAsync('git', ['init'], { cwd: targetDir });
+}
+
 export async function scaffoldProject(
     targetDir: string,
     packageDir: string,
@@ -61,4 +69,5 @@ export async function scaffoldProject(
     await restorePackagedGitignore(targetDir);
     await removeTemplateArtifacts(targetDir);
     await renameProject(targetDir, identity);
+    await initializeGitRepository(targetDir);
 }

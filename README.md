@@ -16,7 +16,7 @@ Pass values directly when needed:
 pnpm create @duonghieu0712z/tauri-vue-template@latest my-app --name "My App" --id "com.example.my-app" --author "Your Name"
 ```
 
-The CLI copies the bundled template into the target directory, updates the package name, Tauri product name, application identifier, Rust crate names, release workflow metadata, and VS Code workspace settings.
+The CLI copies the bundled template into the target directory, updates the package name, Tauri product name, application identifier, Rust crate names, release workflow metadata, VS Code workspace settings, and initializes a Git repository.
 
 ## Development
 
