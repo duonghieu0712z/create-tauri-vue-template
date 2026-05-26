@@ -46,7 +46,7 @@ jobs:
           filter_mode: ${{ github.event_name == 'pull_request' && 'added' || 'nofilter' }}
           fail_level: error
           workdir: .
-          eslint_flags: ". --cache"
+          eslint_flags: '. --cache'
 
       - name: Check types
         run: pnpm type-check
