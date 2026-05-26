@@ -24,12 +24,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 11
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 24
           cache: pnpm
 
       - name: Install dependencies
@@ -38,8 +38,11 @@ jobs:
       - name: Check formatting
         run: pnpm format
 
-      - name: Check lint
-        run: pnpm lint
+      - name: Check oxlint
+        run: pnpm lint:github:oxlint
+
+      - name: Check ESLint
+        run: pnpm lint:github:eslint
 
       - name: Check types
         run: pnpm type-check

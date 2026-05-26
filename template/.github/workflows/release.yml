@@ -10,10 +10,6 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: true
 
-env:
-  NODE_VERSION: 24
-  PNPM_VERSION: 11
-
 jobs:
   build:
     permissions:
@@ -46,12 +42,12 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v6
         with:
-          version: ${{ env.PNPM_VERSION }}
+          version: 11
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: ${{ env.NODE_VERSION }}
+          node-version: 24
           cache: pnpm
 
       - name: Setup Rust
