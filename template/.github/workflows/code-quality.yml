@@ -7,11 +7,8 @@ on:
       - main
 
 permissions:
+  checks: write
   contents: read
-
-env:
-  NODE_VERSION: '24'
-  PNPM_VERSION: '11'
 
 jobs:
   frontend:
@@ -42,7 +39,14 @@ jobs:
         run: pnpm lint:github:oxlint
 
       - name: Check ESLint
-        run: pnpm lint:github:eslint
+        uses: reviewdog/action-eslint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: ${{ github.event_name == 'pull_request' && 'github-pr-check' || 'github-check' }}
+          filter_mode: ${{ github.event_name == 'pull_request' && 'added' || 'nofilter' }}
+          fail_level: error
+          workdir: .
+          eslint_flags: ". --cache"
 
       - name: Check types
         run: pnpm type-check
