@@ -6,19 +6,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-    --font-ui: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    --font-ui: 'Geist', var(--font-sans);
 }
 
 @layer base {
     * {
-        @apply border-border outline-ring/50 select-none;
+        @apply border-border outline-ring/50;
     }
+
+    html {
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        -webkit-text-size-adjust: 100%;
+    }
+
     body {
-        @apply bg-background text-foreground font-ui cursor-default;
+        @apply bg-background text-foreground font-ui cursor-default antialiased select-none;
     }
+
     button:not(:disabled),
     [role='button']:not(:disabled) {
-        cursor: pointer;
+        @apply cursor-pointer;
     }
 }
 
