@@ -15,8 +15,15 @@ export default defineConfig(async () => ({
         vue(),
         tailwindcss(),
         vueDevTools(),
-        AutoImport({ imports: ['vue'], dts: 'src/generated/auto-import.d.ts', vueTemplate: true }),
-        Components({ dirs: ['src/components'], dts: 'src/generated/components.d.ts' }),
+        AutoImport({
+            imports: ['vue'],
+            dts: 'src/generated/auto-import.d.ts',
+            vueTemplate: true,
+        }),
+        Components({
+            dirs: ['src/components'],
+            dts: 'src/generated/components.d.ts',
+        }),
     ],
     resolve: {
         alias: {
