@@ -1,10 +1,8 @@
-use tauri_specta::Builder;
-
 mod command;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    let specta_builder = Builder::<tauri::Wry>::new().commands(command::commands());
+    let specta_builder = tauri_specta::Builder::<tauri::Wry>::new().commands(command::commands());
 
     #[cfg(all(debug_assertions, not(mobile)))]
     {
