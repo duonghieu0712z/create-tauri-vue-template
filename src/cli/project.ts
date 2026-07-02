@@ -1,7 +1,6 @@
 import { resolve } from 'node:path';
 
 import { readJson, updateText, writeJson } from './files.js';
-import { updateReleaseWorkflow } from './release-workflow.js';
 import type { ProjectIdentity } from './types.js';
 
 type PackageJson = {
@@ -31,6 +30,14 @@ type TauriConfig = {
 };
 
 const initialProjectVersion = '0.0.1';
+
+function literal(value: string): () => string {
+    return () => value;
+}
+
+function tomlString(value: string): string {
+    return JSON.stringify(value);
+}
 
 export async function renameProject(targetDir: string, identity: ProjectIdentity): Promise<void> {
     const packageJsonPath = resolve(targetDir, 'package.json');
@@ -66,17 +73,19 @@ export async function renameProject(targetDir: string, identity: ProjectIdentity
     await writeJson(tauriConfigPath, tauriConfig);
 
     await updateText(resolve(targetDir, 'index.html'), [
-        [/<title>.*<\/title>/, `<title>${identity.appName}</title>`],
+        [/<title>.*<\/title>/, literal(`<title>${identity.appName}</title>`)],
     ]);
 
-    await updateText(resolve(targetDir, 'README.md'), [[/^# .+$/m, `# ${identity.appName}`]]);
+    await updateText(resolve(targetDir, 'README.md'), [
+        [/^# .+$/m, literal(`# ${identity.appName}`)],
+    ]);
 
     await updateText(resolve(targetDir, 'src-tauri', 'Cargo.toml'), [
         [/^name = "([^"]+)"/m, `name = "${identity.crateName}"`],
         [/^version = "([^"]+)"/m, `version = "${initialProjectVersion}"`],
         [
             /^description = "([^"]+)"/m,
-            `description = "${identity.description || identity.appName}"`,
+            literal(`description = ${tomlString(identity.description || identity.appName)}`),
         ],
         [/^(\[lib\]\s+[\s\S]*?^name = )"([^"]+)"/m, `$1"${identity.crateLibName}"`],
     ]);
@@ -84,16 +93,13 @@ export async function renameProject(targetDir: string, identity: ProjectIdentity
     await updateText(resolve(targetDir, 'src-tauri', 'Cargo.toml'), [
         [
             /^authors = \[[^\]]*\]/m,
-            identity.author ? `authors = ["${identity.author}"]` : 'authors = []',
+            literal(
+                identity.author ? `authors = [${tomlString(identity.author)}]` : 'authors = []',
+            ),
         ],
     ]);
 
     await updateText(resolve(targetDir, 'src-tauri', 'src', 'main.rs'), [
         [/[a-zA-Z0-9_]+_lib::run\(\)/, `${identity.crateLibName}::run()`],
     ]);
-
-    await updateReleaseWorkflow(
-        resolve(targetDir, '.github', 'workflows', 'release.yml'),
-        identity,
-    );
 }

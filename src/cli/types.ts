@@ -23,4 +23,6 @@ export type ProjectIdentity = {
     description?: string;
 };
 
-export type Replacement = [pattern: RegExp, replacement: string];
+export type ReplacementValue = string | ((substring: string, ...args: unknown[]) => string);
+
+export type Replacement = [pattern: RegExp, replacement: ReplacementValue];

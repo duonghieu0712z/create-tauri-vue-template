@@ -11,7 +11,12 @@
     },
     "files": [
         "dist",
-        "template"
+        "template",
+        "!template/node_modules",
+        "!template/dist",
+        "!template/dist-ssr",
+        "!template/src-tauri/target",
+        "!template/src-tauri/gen/schemas"
     ],
     "type": "module",
     "publishConfig": {

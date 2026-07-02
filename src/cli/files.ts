@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-import type { Replacement } from './types.js';
+import type { Replacement, ReplacementValue } from './types.js';
 
 export async function readJson<T>(path: string): Promise<T> {
     return JSON.parse(await readFile(path, 'utf8')) as T;
@@ -13,11 +13,15 @@ export async function writeJson(path: string, value: unknown): Promise<void> {
 export function replaceOne(
     content: string,
     pattern: RegExp,
-    replacement: string,
+    replacement: ReplacementValue,
     description: string,
 ): string {
     if (!pattern.test(content)) {
         throw new Error(`Could not update ${description}`);
+    }
+
+    if (typeof replacement === 'string') {
+        return content.replace(pattern, replacement);
     }
 
     return content.replace(pattern, replacement);
