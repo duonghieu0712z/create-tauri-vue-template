@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   id-token: write
 
 jobs:
@@ -48,3 +48,65 @@ jobs:
 
       - name: Publish
         run: pnpm publish --access public --no-git-checks
+
+  release:
+    name: Create GitHub release
+    needs: publish
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Read release changelog
+        id: changelog
+        run: |
+          ruby <<'RUBY'
+          require 'json'
+          require 'securerandom'
+
+          ref = ENV.fetch('GITHUB_REF_NAME')
+          version = ref.sub(/^v/, '')
+          body = "Version #{version} release."
+
+          if File.exist?('CHANGELOG.md')
+            begin
+              content = File.read('CHANGELOG.md')
+              escaped_version = Regexp.escape(version)
+              pattern = /^##\s+(?<heading>\[?v?#{escaped_version}\]?(?:\s+-[^\r\n]*)?)\r?\n(?<body>.*?)(?=^##\s+|\z)/m
+              match = content.match(pattern)
+
+              if match && !match[:body].strip.empty?
+                anchor = match[:heading]
+                  .strip
+                  .downcase
+                  .gsub(/[\[\].]/, '')
+                  .gsub(/[^a-z0-9 _-]/, '')
+                  .gsub(/\s+/, '-')
+                changelog_url = "#{ENV.fetch('GITHUB_SERVER_URL')}/#{ENV.fetch('GITHUB_REPOSITORY')}/blob/#{ref}/CHANGELOG.md##{anchor}"
+                body = "#{match[:body].strip}\n\n[See full changelog](#{changelog_url})"
+              end
+            rescue StandardError
+              warn 'Failed to read release changelog. Using fallback release body.'
+            end
+          end
+
+          delimiter = SecureRandom.uuid
+          File.open(ENV.fetch('GITHUB_OUTPUT'), 'a') do |output|
+            output.puts "body<<#{delimiter}"
+            output.puts body
+            output.puts delimiter
+          end
+          RUBY
+
+      - name: Create release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: ${{ steps.changelog.outputs.body }}
+          draft: false
+          prerelease: false
