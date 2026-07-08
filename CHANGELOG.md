@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-07-08
+
+### Changed
+
+- Improve the template release notes generation for manual draft builds and use explicit release asset platform names.
+
 ## [0.1.2] - 2026-07-06
 
 ### Changed
@@ -26,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use the dedicated `macos-15-intel` runner for macOS x86_64 release builds.
 - Remove explicit macOS target arguments from the release workflow now that each macOS build uses its own runner.
 
-[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.2...HEAD
+[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.0...v0.1.1
