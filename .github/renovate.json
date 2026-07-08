@@ -9,6 +9,9 @@
     "schedule": [
         "before 4am on monday"
     ],
+    "labels": [
+        "dependencies"
+    ],
     "enabledManagers": [
         "npm",
         "cargo",
@@ -19,7 +22,18 @@
     "automergeType": "pr",
     "automergeStrategy": "squash",
     "configMigration": true,
+    "lockFileMaintenance": {
+        "enabled": true,
+        "automerge": true
+    },
     "packageRules": [
+        {
+            "description": "Apply pnpm default minimum release age to npm updates",
+            "matchManagers": [
+                "npm"
+            ],
+            "minimumReleaseAge": "1 day"
+        },
         {
             "description": "Group npm minor and patch updates",
             "matchManagers": [
@@ -31,7 +45,10 @@
             ],
             "groupName": "npm minor and patch",
             "groupSlug": "npm-minor-patch",
-            "automerge": true
+            "automerge": true,
+            "addLabels": [
+                "npm"
+            ]
         },
         {
             "description": "Group Cargo minor and patch updates",
@@ -44,7 +61,10 @@
             ],
             "groupName": "cargo minor and patch",
             "groupSlug": "cargo-minor-patch",
-            "automerge": true
+            "automerge": true,
+            "addLabels": [
+                "cargo"
+            ]
         },
         {
             "description": "Group GitHub Actions minor and patch updates",
@@ -57,7 +77,10 @@
             ],
             "groupName": "github-actions",
             "groupSlug": "github-actions",
-            "automerge": true
+            "automerge": true,
+            "addLabels": [
+                "github-actions"
+            ]
         }
     ]
 }
