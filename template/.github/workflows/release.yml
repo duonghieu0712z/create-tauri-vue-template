@@ -83,16 +83,16 @@ jobs:
         include:
           - os: macos-latest
             label: macos-aarch64
-            assetPlatform: macos
+            platform: macos
           - os: macos-15-intel
             label: macos-x86_64
-            assetPlatform: macos
+            platform: macos
           - os: ubuntu-latest
             label: ubuntu
-            assetPlatform: linux
+            platform: linux
           - os: windows-latest
             label: windows
-            assetPlatform: windows
+            platform: windows
 
     steps:
       - name: Checkout repository
@@ -136,4 +136,4 @@ jobs:
           releaseBody: ${{ needs.changelog.outputs.body }}
           releaseDraft: true
           prerelease: false
-          releaseAssetNamePattern: '[name]-v[version]-${{ matrix.assetPlatform }}-[arch][setup][ext]'
+          releaseAssetNamePattern: '[name]-v[version]-${{ matrix.platform }}-[arch][setup][ext]'
