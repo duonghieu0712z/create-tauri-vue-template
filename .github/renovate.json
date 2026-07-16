@@ -1,22 +1,10 @@
 {
     "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-    "extends": [
-        "config:recommended",
-        ":dependencyDashboard",
-        ":semanticCommits"
-    ],
+    "extends": ["config:recommended", ":dependencyDashboard", ":semanticCommits"],
     "timezone": "Etc/UTC",
-    "schedule": [
-        "before 4am on monday"
-    ],
-    "labels": [
-        "dependencies"
-    ],
-    "enabledManagers": [
-        "npm",
-        "cargo",
-        "github-actions"
-    ],
+    "schedule": ["before 4am on monday"],
+    "labels": ["dependencies"],
+    "enabledManagers": ["npm", "cargo", "github-actions"],
     "prConcurrentLimit": 10,
     "prHourlyLimit": 5,
     "automergeType": "pr",
@@ -29,58 +17,35 @@
     "packageRules": [
         {
             "description": "Apply pnpm default minimum release age to npm updates",
-            "matchManagers": [
-                "npm"
-            ],
+            "matchManagers": ["npm"],
             "minimumReleaseAge": "1 day"
         },
         {
             "description": "Group npm minor and patch updates",
-            "matchManagers": [
-                "npm"
-            ],
-            "matchUpdateTypes": [
-                "minor",
-                "patch"
-            ],
+            "matchManagers": ["npm"],
+            "matchUpdateTypes": ["minor", "patch"],
             "groupName": "npm minor and patch",
             "groupSlug": "npm-minor-patch",
             "automerge": true,
-            "addLabels": [
-                "npm"
-            ]
+            "addLabels": ["npm"]
         },
         {
             "description": "Group Cargo minor and patch updates",
-            "matchManagers": [
-                "cargo"
-            ],
-            "matchUpdateTypes": [
-                "minor",
-                "patch"
-            ],
+            "matchManagers": ["cargo"],
+            "matchUpdateTypes": ["minor", "patch"],
             "groupName": "cargo minor and patch",
             "groupSlug": "cargo-minor-patch",
             "automerge": true,
-            "addLabels": [
-                "cargo"
-            ]
+            "addLabels": ["cargo"]
         },
         {
             "description": "Group GitHub Actions minor and patch updates",
-            "matchManagers": [
-                "github-actions"
-            ],
-            "matchUpdateTypes": [
-                "minor",
-                "patch"
-            ],
+            "matchManagers": ["github-actions"],
+            "matchUpdateTypes": ["minor", "patch"],
             "groupName": "github-actions",
             "groupSlug": "github-actions",
             "automerge": true,
-            "addLabels": [
-                "github-actions"
-            ]
+            "addLabels": ["github-actions"]
         }
     ]
 }
