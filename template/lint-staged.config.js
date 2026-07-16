@@ -32,5 +32,5 @@ export default {
             ? [createCommand('oxlint --fix', filtered), createCommand('eslint --fix', filtered)]
             : [];
     },
-    '*.rs': () => ['cargo +nightly fmt --manifest-path src-tauri/Cargo.toml'],
+    '*.rs': () => ['cargo fmt --manifest-path src-tauri/Cargo.toml'],
 };
