@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Replace Dependabot with Renovate for dependency update automation, including grouped minor and patch updates for npm, Cargo, and GitHub Actions.
+- Add a frontend build step to the template code quality workflow.
+- Update the template release workflow matrix naming and use the macOS 26 Intel runner for x86_64 builds.
+- Align template Rust lint-staged formatting with the stable Cargo toolchain.
+- Update template npm dependencies and lockfile.
+
+### Removed
+
+- Remove the template `scrollbar` CSS utility.
+
 ## [0.1.3] - 2026-07-08
 
 ### Changed
