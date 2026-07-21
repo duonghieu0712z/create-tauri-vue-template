@@ -1,0 +1,97 @@
+name: Template Code Quality
+
+on:
+  pull_request:
+    paths:
+      - template/**
+      - .github/workflows/template-code-quality.yml
+  push:
+    branches:
+      - main
+    paths:
+      - template/**
+      - .github/workflows/template-code-quality.yml
+
+permissions:
+  contents: read
+
+jobs:
+  frontend-quality:
+    name: Frontend quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: template
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 11
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: template/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format
+
+      - name: Check oxlint
+        run: pnpm lint:check:oxlint --format=github
+
+      - name: Check ESLint
+        run: pnpm lint:check:eslint
+
+      - name: Check types
+        run: pnpm type-check
+
+      - name: Build frontend
+        run: pnpm build-only
+
+  tauri-quality:
+    name: Tauri quality (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Linux dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: template/src-tauri -> target
+
+      - name: Check formatting
+        working-directory: template/src-tauri
+        run: cargo fmt -- --check
+
+      - name: Check Clippy
+        working-directory: template/src-tauri
+        run: cargo clippy --all-targets --all-features -- -D warnings
