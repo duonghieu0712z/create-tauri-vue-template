@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated the packaged template's Tailwind CSS sorting configuration and global styles ([609d1c9](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/609d1c9c9b357c72da7cdf83d4a93968195627ab)).
+
 ## [1.0.0] - 2026-07-16
 
 ### Changed
