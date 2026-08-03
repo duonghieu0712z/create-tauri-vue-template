@@ -34,6 +34,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Install template dependencies
+        working-directory: template
+        run: pnpm install --frozen-lockfile
+
       - name: Check formatting
         run: pnpm format
 
