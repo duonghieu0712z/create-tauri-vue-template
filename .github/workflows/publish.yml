@@ -2,11 +2,8 @@ name: Publish
 
 on:
   push:
-    tags:
-      - v*
-  release:
-    types:
-      - published
+    branches:
+      - release
   workflow_dispatch:
 
 permissions:
@@ -52,7 +49,7 @@ jobs:
   release:
     name: Create GitHub release
     needs: publish
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -61,15 +58,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Read package version
+        id: version
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const { appendFileSync, readFileSync } = require('node:fs');
+
+          const { version } = JSON.parse(readFileSync('package.json', 'utf8'));
+
+          if (typeof version !== 'string' || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(version)) {
+              throw new Error(`Invalid package version: ${version}`);
+          }
+
+          appendFileSync(process.env.GITHUB_OUTPUT, `version=${version}\ntag=v${version}\n`);
+          NODE
+
       - name: Read release changelog
         id: changelog
+        env:
+          RELEASE_TAG: ${{ steps.version.outputs.tag }}
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
         run: |
           ruby <<'RUBY'
           require 'json'
           require 'securerandom'
 
-          ref = ENV.fetch('GITHUB_REF_NAME')
-          version = ref.sub(/^v/, '')
+          ref = ENV.fetch('RELEASE_TAG')
+          version = ENV.fetch('RELEASE_VERSION')
           body = "Version #{version} release."
 
           if File.exist?('CHANGELOG.md')
@@ -105,8 +120,9 @@ jobs:
       - name: Create release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
           body: ${{ steps.changelog.outputs.body }}
           draft: false
           prerelease: false
+          target_commitish: ${{ github.sha }}
