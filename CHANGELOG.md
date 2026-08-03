@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-08-03
+
 ### Changed
 
 - Updated the publish workflow to publish from the release branch and automatically create the corresponding version tag and GitHub release ([7f9a6d9](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/7f9a6d91d5d1ad91ede3ff442686205aaa33b3c2)).
@@ -51,7 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use the dedicated `macos-15-intel` runner for macOS x86_64 release builds.
 - Remove explicit macOS target arguments from the release workflow now that each macOS build uses its own runner.
 
-[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.0...HEAD
+[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.3...v1.0.0
 [0.1.3]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.1...v0.1.2
