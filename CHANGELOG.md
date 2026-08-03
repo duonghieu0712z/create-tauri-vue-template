@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated the publish workflow to publish from the release branch and automatically create the corresponding version tag and GitHub release ([7f9a6d9](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/7f9a6d91d5d1ad91ede3ff442686205aaa33b3c2)).
 - Updated the packaged template's Tailwind CSS sorting configuration and global styles ([609d1c9](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/609d1c9c9b357c72da7cdf83d4a93968195627ab)).
 
 ## [1.0.0] - 2026-07-16
