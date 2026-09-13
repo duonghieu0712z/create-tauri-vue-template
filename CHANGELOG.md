@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.3] - 2026-09-13
+
 ### Added
 
 - Added stricter Rust linting and formatting configuration ([106e3ce](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/106e3ce9b245af684f0894894f9aed67b2f735ac)).
@@ -78,7 +80,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use the dedicated `macos-15-intel` runner for macOS x86_64 release builds.
 - Remove explicit macOS target arguments from the release workflow now that each macOS build uses its own runner.
 
-[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.2...HEAD
+[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v0.1.3...v1.0.0
