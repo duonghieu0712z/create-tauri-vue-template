@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Extracted the template quality checks into a reusable workflow and required them to pass before release builds ([ea66fef](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/ea66feff5bbf951c6091edd08b6f2095f78d3dd5)).
+- Aligned template workflows on pnpm 11, updated frontend dependencies, moved the version bump script into `scripts`, and corrected the release asset name pattern ([ea66fef](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/ea66feff5bbf951c6091edd08b6f2095f78d3dd5)).
+
 ## [1.0.1] - 2026-08-03
 
 ### Fixed
