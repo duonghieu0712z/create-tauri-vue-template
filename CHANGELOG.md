@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added stricter Rust linting and formatting configuration ([106e3ce](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/106e3ce9b245af684f0894894f9aed67b2f735ac)).
+
+### Fixed
+
+- Prevented the root pre-commit hook from running root Oxc tools against staged template files ([106e3ce](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/106e3ce9b245af684f0894894f9aed67b2f735ac)).
+- Corrected template release changelog links to reference the release tag or dispatched commit ([106e3ce](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/106e3ce9b245af684f0894894f9aed67b2f735ac)).
+
+### Changed
+
+- Replaced panic-prone startup paths with explicit error handling and updated template dependencies ([106e3ce](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/106e3ce9b245af684f0894894f9aed67b2f735ac)).
+- Centralized the pnpm version in package manifests and updated workflows to read it from the relevant project ([80c1315](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/80c1315d4af3b27e290d05f3a007f5ca719c06a9)).
+
 ## [1.0.2] - 2026-09-13
 
 ### Changed
