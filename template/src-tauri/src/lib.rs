@@ -8,9 +8,11 @@ pub fn run() {
     {
         use specta_typescript::Typescript;
 
-        specta_builder
-            .export(Typescript::default(), "../src/generated/bindings.ts")
-            .unwrap();
+        if let Err(error) =
+            specta_builder.export(Typescript::default(), "../src/generated/bindings.ts")
+        {
+            eprintln!("failed to export TypeScript bindings: {error}");
+        }
     }
 
     let builder = tauri::Builder::default()
@@ -36,17 +38,23 @@ pub fn run() {
             .build(),
     );
 
-    builder
+    let result = builder
         .invoke_handler(specta_builder.invoke_handler())
         .setup(|_app| {
             #[cfg(debug_assertions)]
             {
                 use tauri::Manager;
 
-                _app.get_webview_window("main").unwrap().open_devtools();
+                if let Some(window) = _app.get_webview_window("main") {
+                    window.open_devtools();
+                }
             }
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .run(tauri::generate_context!());
+
+    if let Err(error) = result {
+        eprintln!("error while running Tauri application: {error}");
+        std::process::exit(1);
+    }
 }
