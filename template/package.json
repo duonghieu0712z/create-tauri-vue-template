@@ -49,7 +49,7 @@
         "jiti": "^2.7.0",
         "lint-staged": "^17.2.0",
         "npm-run-all2": "^9.0.3",
-        "oxfmt": "^0.67.0",
+        "oxfmt": "^0.68.0",
         "oxlint": "^1.77.0",
         "picomatch": "^4.0.5",
         "tailwindcss": "^4.3.3",
@@ -64,5 +64,5 @@
     "engines": {
         "node": ">=22.12.0"
     },
-    "packageManager": "pnpm@12.4.1"
+    "packageManager": "pnpm@12.5.1"
 }
