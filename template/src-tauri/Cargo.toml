@@ -19,7 +19,7 @@ chrono = "0.4.45"
 log = "0.4.32"
 serde = { version = "1.0.228", features = ["derive"] }
 specta = { version = "2.0.0-rc.25", features = ["derive"] }
-specta-typescript = "0.0.12"
+specta-typescript = "0.0.14"
 tauri = { version = "2.11.2", features = [] }
 tauri-plugin-devtools = "2.1.0"
 tauri-plugin-log = "2.8.0"
