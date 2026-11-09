@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-11-09
+
 ### Changed
 
 - Updated CLI dependencies and tooling, including `cac`, `@commitlint/cli`, `@commitlint/config-conventional`, `@types/node`, `lint-staged`, and `oxlint` ([fd0b245](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/fd0b2456054513a69b1649251d977ea0d34d696f)).
@@ -90,7 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use the dedicated `macos-15-intel` runner for macOS x86_64 release builds.
 - Remove explicit macOS target arguments from the release workflow now that each macOS build uses its own runner.
 
-[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.3...HEAD
+[unreleased]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/duonghieu0712z/create-tauri-vue-template/compare/v1.0.0...v1.0.1
