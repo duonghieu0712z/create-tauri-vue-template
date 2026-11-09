@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated CLI dependencies and tooling, including `cac`, `@commitlint/cli`, `@commitlint/config-conventional`, `@types/node`, `lint-staged`, and `oxlint` ([fd0b245](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/fd0b2456054513a69b1649251d977ea0d34d696f)).
+- Updated root and template package manager pins to `pnpm@12.18.0` and refreshed JavaScript lockfiles ([e22980f](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/e22980f0fc3d1e783f326c81a40fd8deaba8696a)).
+- Raised the generated template's minimum Node.js version from 22.12.0 to 22.18.0. Users on Node.js 22.12–22.17 must upgrade before running development, build, or preview commands, which now use Vite's native config loader ([d4ea9a0](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/d4ea9a0b97c30a451e09be497fe8a13447641082)).
+- Aligned the template's TypeScript tooling configuration with NodeNext and TypeScript import extensions, and simplified the Vite configuration to a plain object ([d4ea9a0](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/d4ea9a0b97c30a451e09be497fe8a13447641082)).
+- Updated template frontend dependencies and replaced the local `clsx` and `tailwind-merge` wrapper with a re-export from `cn` ([d4ea9a0](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/d4ea9a0b97c30a451e09be497fe8a13447641082)).
+- Updated template Rust dependencies, including `tauri` 2.12.5, `specta` and `tauri-specta` 2.0.0-rc.26, `specta-typescript` 0.0.13, and `tauri-plugin-prevent-default` 6.0.1 ([945d0e8](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/945d0e8ff2a9c0ca49a093c335dab31c905e9dba)).
+- Grouped the template's Tauri npm and Cargo dependency updates into one weekly Dependabot pull request, staggered the remaining update schedules, and enabled npm version requirement increases ([1a2cfab](https://github.com/duonghieu0712z/create-tauri-vue-template/commit/1a2cfabbcee4d95a1b5296e7693e51622df2de4d)).
+
 ## [1.0.3] - 2026-09-13
 
 ### Added
